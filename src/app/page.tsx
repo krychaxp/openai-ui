@@ -1,95 +1,140 @@
-import Image from 'next/image'
-import styles from './page.module.css'
+"use client";
+import Image from "next/image";
+import {
+  Flex,
+  Button,
+  FormControl,
+  FormLabel,
+  Input,
+  Select,
+  Stack,
+} from "@chakra-ui/react";
+import {
+  Configuration,
+  CreateImageRequestSizeEnum,
+  ImagesResponseDataInner,
+  OpenAIApi,
+} from "openai";
+import { FormEventHandler, useEffect, useRef, useState } from "react";
+
+const sizes: CreateImageRequestSizeEnum[] = ["256x256", "512x512", "1024x1024"];
 
 export default function Home() {
+  const ref = useRef<HTMLFormElement | null>(null);
+  const [images, setImages] = useState<ImagesResponseDataInner[]>([]);
+
+  const onSubmit: FormEventHandler<HTMLFormElement> = (e) => {
+    e.preventDefault();
+    if (!ref.current) {
+      return;
+    }
+
+    const form = new FormData(ref.current);
+
+    const openaiApiKey = form.get("openaiApiKey")?.toString();
+
+    const prompt = form.get("prompt")?.toString();
+    const size = form.get("size")?.toString() as CreateImageRequestSizeEnum;
+
+    if (!prompt) {
+      window.alert("Please enter a prompt");
+      return;
+    }
+
+    if (!openaiApiKey) {
+      window.alert("Please enter a openaiApiKey");
+      return;
+    }
+
+    window.localStorage.setItem("openaiApiKey", openaiApiKey);
+
+    console.log(openaiApiKey, prompt);
+
+    const configuration = new Configuration({
+      apiKey: openaiApiKey,
+    });
+
+    const openai = new OpenAIApi(configuration);
+
+    openai
+      .createImage({
+        prompt,
+        n: 1,
+        size,
+      })
+      .then((res) => {
+        setImages(res.data.data);
+      })
+      .catch((err) => {
+        console.error(err);
+        window.alert(err.message);
+      });
+  };
+
+  useEffect(() => {
+    const input = ref.current?.querySelector<HTMLInputElement>(
+      '[name="openaiApiKey"]'
+    );
+
+    if (input) {
+      input.value = localStorage.getItem("openaiApiKey") ?? "";
+    }
+  }, []);
+
   return (
-    <main className={styles.main}>
-      <div className={styles.description}>
-        <p>
-          Get started by editing&nbsp;
-          <code className={styles.code}>src/app/page.tsx</code>
-        </p>
-        <div>
-          <a
-            href="https://vercel.com?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            By{' '}
-            <Image
-              src="/vercel.svg"
-              alt="Vercel Logo"
-              className={styles.vercelLogo}
-              width={100}
-              height={24}
-              priority
-            />
-          </a>
-        </div>
-      </div>
-
-      <div className={styles.center}>
-        <Image
-          className={styles.logo}
-          src="/next.svg"
-          alt="Next.js Logo"
-          width={180}
-          height={37}
-          priority
-        />
-      </div>
-
-      <div className={styles.grid}>
-        <a
-          href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className={styles.card}
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2>
-            Docs <span>-&gt;</span>
-          </h2>
-          <p>Find in-depth information about Next.js features and API.</p>
-        </a>
-
-        <a
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className={styles.card}
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2>
-            Learn <span>-&gt;</span>
-          </h2>
-          <p>Learn about Next.js in an interactive course with&nbsp;quizzes!</p>
-        </a>
-
-        <a
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className={styles.card}
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2>
-            Templates <span>-&gt;</span>
-          </h2>
-          <p>Explore the Next.js 13 playground.</p>
-        </a>
-
-        <a
-          href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className={styles.card}
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2>
-            Deploy <span>-&gt;</span>
-          </h2>
-          <p>
-            Instantly deploy your Next.js site to a shareable URL with Vercel.
-          </p>
-        </a>
-      </div>
+    <main>
+      <Flex
+        width="full"
+        height="100vh"
+        align="center"
+        justify="center"
+        maxWidth="2xl"
+        direction="column"
+        gap={5}
+        mx="auto"
+      >
+        <form ref={ref} onSubmit={onSubmit}>
+          <Flex direction="column" gap={3} width={600}>
+            <FormControl>
+              <FormLabel>Openai Api Key</FormLabel>
+              <Input name="openaiApiKey" />
+            </FormControl>
+            <FormControl>
+              <FormLabel>What you want to generate?</FormLabel>
+              <Input name="prompt" />
+            </FormControl>
+            <FormControl>
+              <FormLabel>Image size</FormLabel>
+              <Select
+                placeholder="Select image size"
+                defaultValue={sizes[0]}
+                isRequired
+              >
+                {sizes.map((size) => (
+                  <option key={size} value={size}>
+                    {size}
+                  </option>
+                ))}
+              </Select>
+            </FormControl>
+            <Button type="submit">Generate</Button>
+          </Flex>
+        </form>
+        <Stack>
+          {images.map(
+            (image) =>
+              image.url && (
+                <Image
+                  src={image.url}
+                  key={image.url}
+                  alt="image"
+                  width={256}
+                  height={256}
+                />
+              )
+          )}
+        </Stack>
+      </Flex>
     </main>
-  )
+  );
 }
