@@ -1,8 +1,9 @@
-import "./globals.css";
-import { Inter } from "next/font/google";
-import { AppProviders } from "./AppProviders";
+import { Inter } from 'next/font/google';
 
-const inter = Inter({ subsets: ["latin"] });
+import { AppProviders } from './AppProviders';
+import './globals.css';
+
+const inter = Inter({ subsets: ['latin'] });
 
 export default function RootLayout({
   children,
@@ -10,7 +11,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en">
+    <html lang="en" className="dark">
       <body className={inter.className}>
         <AppProviders>{children}</AppProviders>
       </body>
@@ -19,6 +20,6 @@ export default function RootLayout({
 }
 
 export const metadata = {
-  title: "OpenAI Playground",
-  description: "Play with OpenAI's API",
+  title: 'OpenAi Images Generator | Playground',
+  description: 'Simple UI for generating images with OpenAI API',
 };
