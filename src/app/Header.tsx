@@ -15,20 +15,17 @@ export const Header = () => {
   return (
     <Navbar isBordered>
       <NavbarBrand></NavbarBrand>
-      <NavbarContent justify="center">
-        <NavbarItem isActive>OpenAi UI for Generating images</NavbarItem>
-      </NavbarContent>
-      <NavbarContent justify="end">
-        <NavbarItem>
-          <Button
-            as={Link}
-            href={packageJson.repository.url}
-            isIconOnly
-            className="text-white rounded-large"
-          >
-            <Github />
-          </Button>
-        </NavbarItem>
+      <h1 className="font-bold">OpenAi UI for Generating images</h1>
+      <NavbarContent justify="end" as="div">
+        <Button
+          as={Link}
+          href={packageJson.repository.url}
+          isIconOnly
+          className="text-white rounded-large"
+          title="Github repo"
+        >
+          <Github />
+        </Button>
       </NavbarContent>
     </Navbar>
   );

@@ -1,3 +1,4 @@
+import { Metadata } from 'next';
 import { Inter } from 'next/font/google';
 import Script from 'next/script';
 
@@ -30,14 +31,22 @@ export default function RootLayout({
         `}
         </Script>
       </head>
-      <body className={inter.className}>
+      <body className={inter.className} suppressHydrationWarning>
         <AppProviders>{children}</AppProviders>
       </body>
     </html>
   );
 }
 
-export const metadata = {
+export const metadata: Metadata = {
   title: 'OpenAi Images Generator | Playground',
   description: 'Simple UI for generating images with OpenAI API',
+  robots: {
+    index: true,
+    follow: true,
+  },
+  manifest: '/manifest.json',
+  other: {
+    'google-site-verification': 'zCga7AvcYZiZ-J-8MLeSShhTYp4AJSHM4oo5wJmPT8c',
+  },
 };

@@ -1,0 +1,23 @@
+{
+  "title": "OpenAI UI Images",
+  "short_name": "OpenAI UI",
+  "name": "OpenAi Images Generator | Playground",
+  "description": "Simple UI for generating images with OpenAI API",
+  "start_url": "https://openai-ui-images.vercel.app/",
+  "background_color": "#000000",
+  "theme_color": "#000000",
+  "display": "standalone",
+  "manifest_version": 3,
+  "icons": [
+    {
+      "src": "https://openai-ui-images.vercel.app/favicon.ico",
+      "sizes": "48x48",
+      "type": "image/x-icon"
+    },
+    {
+      "src": "https://openai-ui-images.vercel.app/favicon.ico",
+      "sizes": "128x128",
+      "type": "image/x-icon"
+    }
+  ]
+}
