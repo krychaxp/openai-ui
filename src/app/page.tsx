@@ -111,7 +111,7 @@ export default function Home() {
           {...register('prompt')}
         />
         <Select
-          label="Select image size"
+          label="Select image size and model"
           isRequired
           labelPlacement="outside"
           defaultSelectedKeys={[imageSizes[0].value]}
@@ -119,7 +119,7 @@ export default function Home() {
           {...register('size')}
         >
           {imageSizes.map((item) => {
-            const label = `${item.label} $${item.cost.toPrecision(2)} / image`;
+            const label = `${item.label} - $${item.cost.toPrecision(2)} / image`;
             return (
               <SelectItem key={item.value} textValue={label}>
                 {label}
