@@ -9,10 +9,10 @@ import {
   SelectItem,
   Skeleton,
   Textarea,
-} from '@nextui-org/react';
+} from '@heroui/react';
 import NextImage from 'next/image';
 import { Image } from 'openai/resources';
-import { SubmitHandler, set, useForm } from 'react-hook-form';
+import { SubmitHandler, useForm } from 'react-hook-form';
 
 import { EyeFilledIcon } from '@/icons/EyeFilledIcon';
 import { EyeSlashFilledIcon } from '@/icons/EyeSlashFilledIcon';
@@ -121,7 +121,7 @@ export default function Home() {
           {imageSizes.map((item) => {
             const label = `${item.label} $${item.cost.toPrecision(2)} / image`;
             return (
-              <SelectItem key={item.value} value={item.value} textValue={label}>
+              <SelectItem key={item.value} textValue={label}>
                 {label}
               </SelectItem>
             );
